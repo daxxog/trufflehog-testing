@@ -1,7 +1,7 @@
 ## 0.0.3 (unreleased)
 
 
-- Nothing changed yet.
+- Maybe fixed GitHub workflow.
 
 
 ## 0.0.2 (2023-06-04)
