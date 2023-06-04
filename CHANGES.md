@@ -1,4 +1,4 @@
-## 0.0.3 (unreleased)
+## 0.0.3 (2023-06-04)
 
 
 - Maybe fixed GitHub workflow.
