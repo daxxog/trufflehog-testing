@@ -9,7 +9,7 @@ help:
 
 container-built.txt: Dockerfile entrypoint.sh
 	podman build . -t localhost/trufflehog-scan-test \
-		--build-arg SCANNER_VERSION=$$(git log -n 1 --pretty=format:%H) \
+		--build-arg GITHUB_REF=$$(git log -n 1 --pretty=format:%H) \
 		--build-arg SCANNER_ORIGIN=$$(git remote get-url origin) \
 	;
 	date | tee container-built.txt

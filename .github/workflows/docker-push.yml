@@ -23,13 +23,14 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-          SCANNER_VERSION: ${{ github.ref }}
+          GITHUB_REF: ${{ github.ref }}
+          DOCKERHUB_REPO: ${{ format('docker.io/{0}', replace(env.GITHUB_REPOSITORY, '/', '-')) }}
         if: ${{ github.repository_owner == github.actor }}
         run: |
           echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
             --push \
-            --tag docker.io/daxxog/trufflehog-testing:latest \
-            --tag docker.io/daxxog/trufflehog-testing:${{ env.SCANNER_VERSION }} \
-            --build-arg SCANNER_VERSION=${{ env.SCANNER_VERSION }} .
+            --tag $DOCKERHUB_REPO:latest \
+            --tag $DOCKERHUB_REPO:${{ env.GITHUB_REF }} \
+            --build-arg GITHUB_REF=${{ env.GITHUB_REF }} .
