@@ -24,13 +24,14 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
           GITHUB_REF: ${{ github.ref }}
-          DOCKERHUB_REPO: ${{ format('docker.io/{0}', replace(env.GITHUB_REPOSITORY, '/', '-')) }}
+          DOCKERHUB_REPO: docker.io/${{ github.repository }}
         if: ${{ github.repository_owner == github.actor }}
         run: |
           echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
+          REPO=${DOCKERHUB_REPO////-}
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
             --push \
-            --tag $DOCKERHUB_REPO:latest \
-            --tag $DOCKERHUB_REPO:${{ env.GITHUB_REF }} \
-            --build-arg GITHUB_REF=${{ env.GITHUB_REF }} .
+            --tag $REPO:latest \
+            --tag $REPO:${GITHUB_REF#refs/tags/} \
+            --build-arg GITHUB_REF=${GITHUB_REF#refs/tags/} .
