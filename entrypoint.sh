@@ -28,12 +28,16 @@ git fetch origin
 # Get the truffleHog version
 TRUFFLEHOG_VERSION=$(trufflehog --version 2>&1)
 
-# Print the scanner_version, scanner_origin, trufflehog_version, and repo_name
+# Get the current UTC date and time as a RFC 5322 formatted string
+CURRENT_DATE="$(date -R -u)"
+
+# Print the scanner_version, scanner_origin, trufflehog_version, repo_name, and current date and time
 echo "---" > "$OUTPUT_FILE"
 echo "scanner_version: '${SCANNER_VERSION}'" >> "$OUTPUT_FILE"
 echo "scanner_origin: '${SCANNER_ORIGIN}'" >> "$OUTPUT_FILE"
 echo "trufflehog_version: '${TRUFFLEHOG_VERSION}'" >> "$OUTPUT_FILE"
 echo "repo_name: '${REPO_NAME}'" >> "$OUTPUT_FILE"
+echo "scan_date: '${CURRENT_DATE}'" >> "$OUTPUT_FILE"
 echo "---" >> "$OUTPUT_FILE"
 
 # Run trufflehog on the entire repository, output to JSON, then append to YAML
