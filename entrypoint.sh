@@ -25,5 +25,16 @@ git init
 git remote add origin "$BARE_REPO"
 git fetch origin
 
-# Run trufflehog on the entire repository, output to JSON, then transform to YAML
-trufflehog --json git file://$(pwd) | awk 'BEGIN{ORS=""}{print "---\n" $0 "\n"}' > "$OUTPUT_FILE"
+# Get the truffleHog version
+TRUFFLEHOG_VERSION=$(trufflehog --version 2>&1)
+
+# Print the scanner_version, scanner_origin, trufflehog_version, and repo_name
+echo "---" > "$OUTPUT_FILE"
+echo "scanner_version: '${SCANNER_VERSION}'" >> "$OUTPUT_FILE"
+echo "scanner_origin: '${SCANNER_ORIGIN}'" >> "$OUTPUT_FILE"
+echo "trufflehog_version: '${TRUFFLEHOG_VERSION}'" >> "$OUTPUT_FILE"
+echo "repo_name: '${REPO_NAME}'" >> "$OUTPUT_FILE"
+echo "---" >> "$OUTPUT_FILE"
+
+# Run trufflehog on the entire repository, output to JSON, then append to YAML
+trufflehog --json git file://$(pwd) | awk 'BEGIN{ORS=""}{if(NR>1){print "\n---\n" $0}else{print $0}}' >> "$OUTPUT_FILE"
